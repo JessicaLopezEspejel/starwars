@@ -21,13 +21,12 @@ class OddsCounter:
         self.empire_params = empire_params
         self.initiate_objects()
 
-
         # get the list of all possible paths respecting the countdown
         self.all_paths = self.compute_possible_paths(
             origin=self.boat_params["departure"],
             destination=self.boat_params["arrival"],
             countdown=self.empire_params["countdown"],
-            routes_file_path=self.routes_file_path
+            routes_file_path=self.routes_file_path,
         )
 
         # filter very long paths
@@ -48,7 +47,7 @@ class OddsCounter:
         )
 
     def compute_possible_paths(
-        self, origin: str, destination: str, countdown: int, routes_file_path:str
+        self, origin: str, destination: str, countdown: int, routes_file_path: str
     ) -> List[Path]:
         graph: Dict[str, List[Tuple[str, int]]] = defaultdict(list)
 
