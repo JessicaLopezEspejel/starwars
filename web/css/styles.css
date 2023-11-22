@@ -1,0 +1,158 @@
+        
+body {
+    font-family: Arial, sans-serif;
+    margin: 16px;
+    background-color: #f4f4f4;
+}
+
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    width: 50%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+h1 {
+    color: #3a0e0e;
+    text-align: center;
+}
+
+input[type="file"] {
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #4c84af;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+#output {
+    border: 1px solid rgba(49, 34, 34, 0.312);
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 4px;
+    overflow: auto;
+    max-height: 200px;
+}
+
+.string {
+    color: green;
+}
+
+.number {
+    color: darkorange;
+}
+
+.boolean {
+    color: blue;
+}
+
+.null {
+    color: magenta;
+}
+
+.key {
+    color: brown;
+}
+
+#computeOdds {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+#oddsOutput {
+    margin-top: 10px;
+    font-size: 16px;
+    font-family: 'Arial', sans-serif;
+    color: #731818;
+}
+
+/* Style the file input container */
+.custom-file-input-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    margin-right: 30px; /* Adjust as needed */
+
+    /* position: relative;
+    overflow: hidden;
+    display: inline-block; */
+}
+
+/* Style the file input button */
+.custom-file-input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 0;
+    /*filter: alpha(opacity=0); */ /* For IE8 and earlier */
+}
+
+/* Style the custom button to replace the default button */
+.custom-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+/* Style the element that displays the selected file name */
+.selected-file {
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 50px;
+    font-family: sans-serif; /* Specify your preferred font family */
+    font-size: 16px; /* Adjust the font size as needed */
+    /*font-weight: bold;*/
+    color: rgb(23, 160, 21); /* Specify your preferred text color */
+}
+
+.clean-style {
+    background-color: #212528;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Center the button on the page */
+.center-button {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.image-format {
+    width: 70%;
+    height: auto;
+    display: block;
+    margin: 0 auto; /* Center the image horizontally */
+}
+
