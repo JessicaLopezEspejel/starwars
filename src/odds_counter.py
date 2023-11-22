@@ -1,37 +1,44 @@
+import copy
 import sqlite3
 from collections import defaultdict
-from typing import Any, Dict, Tuple, List
+from typing import Any, Dict, List, Tuple
 
 from src.boat import Boat
 from src.empire import Empire
+from src.path import Path
 
 
 class OddsCounter:
     def __init__(
-        self, boat_params: Dict[str, Any], empire_params: Dict[str, Any]
+        self,
+        boat_params: Dict[str, Any],
+        empire_params: Dict[str, Any],
+        routes_file_path: str,
     ) -> None:
+        # initialize main class variables
+        self.routes_file_path = routes_file_path
         self.boat_params = boat_params
         self.empire_params = empire_params
         self.initiate_objects()
 
-        # Connect to the SQLite database
-        self.conn = sqlite3.connect(
-            "./config/universe.db"
-        )  # Replace 'your_database.db' with the actual database name
-        self.cursor = self.conn.cursor()
 
+        # get the list of all possible paths respecting the countdown
         self.all_paths = self.compute_possible_paths(
-            origin="Tatooine",
-            destination="Endor",
+            origin=self.boat_params["departure"],
+            destination=self.boat_params["arrival"],
             countdown=self.empire_params["countdown"],
+            routes_file_path=self.routes_file_path
         )
-        self.possible_paths = [
+
+        # filter very long paths
+        self.possible_paths: List[Path] = [
             path
             for path in self.all_paths
-            if sum([stop[1] for stop in path]) <= self.empire.countdown
+            if sum([stop[1] for stop in path.get_all()]) <= self.empire.countdown
         ]
 
-        # TODO - think about using set(paths) to remove redundunt paths if there are any
+        # remove redundunt paths if there are any
+        self.possible_paths = list(set(self.possible_paths))
 
     def initiate_objects(self) -> None:
         self.boat = Boat(autonomy=self.boat_params["autonomy"])
@@ -40,12 +47,18 @@ class OddsCounter:
             bounty_hunters=self.empire_params["bounty_hunters"],
         )
 
-    def compute_possible_paths(self, origin: str, destination: str, countdown: int) -> List[List[Tuple[str, int]]]:
-        graph = defaultdict(list)
+    def compute_possible_paths(
+        self, origin: str, destination: str, countdown: int, routes_file_path:str
+    ) -> List[Path]:
+        graph: Dict[str, List[Tuple[str, int]]] = defaultdict(list)
+
+        # Connect to the SQLite database
+        conn = sqlite3.connect(routes_file_path)
+        cursor = conn.cursor()
 
         # Query the data from the database (assuming the table is named ROUTES)
-        self.cursor.execute("SELECT * FROM ROUTES")
-        rows = self.cursor.fetchall()
+        _ = cursor.execute("SELECT * FROM ROUTES")
+        rows = cursor.fetchall()
 
         # Populate the graph based on the database records
         for row in rows:
@@ -53,83 +66,79 @@ class OddsCounter:
             graph[src].append((dest, time))
             graph[dest].append((src, time))  # Undirected graph
 
-        self.conn.close()
+        conn.close()
 
-        def dfs(current: str, path: List[Tuple[str, int]], remaining_time: int, consecutive_days: int) -> None:
+        def dfs(
+            current: str, path: Path, remaining_time: int, consecutive_days: int
+        ) -> None:
             if current == destination and remaining_time >= 0:
-                result.append(path[:])  # Append a copy of the path to the result
+                result.append(
+                    copy.deepcopy(path)
+                )  # Append a copy of the path to the result
                 return
 
             # Stay in the current planet
             if remaining_time >= 0 and consecutive_days < 2:
-                path.append((current, 1))
+                path.add_stop((current, 1))
                 dfs(current, path, remaining_time - 1, consecutive_days + 1)
                 path.pop()  # Backtrack
 
             for neighbor, travel_time in graph[current]:
-                if neighbor not in path and remaining_time - travel_time >= 0:
-                    path.append((neighbor, travel_time))
+                if (
+                    neighbor not in path.get_planet_names()
+                    and remaining_time - travel_time >= 0
+                ):
+                    path.add_stop((neighbor, travel_time))
                     dfs(neighbor, path, remaining_time - travel_time, 0)
                     path.pop()  # Backtrack
 
-        result: List[List[Tuple[str, int]]] = []
-        dfs(origin, [], countdown, 0)
+        result: List[Path] = []
+        dfs(origin, Path(), countdown, 0)
         return result
 
-    def update_date(self, time: int) -> None:
-        self.date += time
-
-    def update_probability(self, dst: str) -> None:
-        for element in self.empire.bounty_hunters:
-            planet, day = element["planet"], element["day"]
-
-            if dst == planet and self.date == day:
-                self.fail_prob += (9**self.k) / (10 ** (self.k + 1))
-                self.k += 1
-                return
-
-    def compute_odds_for_one_path(self, possible_path: List[Tuple[str, int]]) -> float:
-        self.fail_prob = 0.0
-        self.k = 0
-        self.date = 0
+    def compute_odds_for_one_path(self, path: Path) -> float:
         self.initiate_objects()
-        cur = "Tatooine"
-        for subpath in possible_path:
-            dst, time = subpath
+        current = self.boat_params["departure"]
+        for subpath in path.get_all():
+            dest, travel_time = subpath
 
-            if dst != cur:
-                # needs to do fuel to recharge energy
-                if self.boat.autonomy < time:
+            if dest != current:
+                # if not enough autonomy, we need to refuel to recharge energy
+                if self.boat.autonomy < travel_time:
                     fail = self.empire.update_countdown(1)  # recharge
-                    if fail:  # the countdown finished
-                        self.fail_prob = 1.0
-                        return self.fail_prob
+                    if fail:  # the countdown finished, no need to continue
+                        path.set_fail_prob(1.0)
+                        return float(path.get_fail_prob())
 
                     # fuel the boat
-                    self.boat.increase_autonomy(6 - self.boat.autonomy)  # is it sure?
+                    self.boat.increase_autonomy(6 - self.boat.autonomy)
 
-                    self.update_date(1)
-                    self.update_probability(cur)
+                    # update the date and the fail probability
+                    path.update_date(1)
+                    path.update_probability(
+                        current, self.empire_params["bounty_hunters"]
+                    )
 
             # travel
-            self.boat.reduce_autonomy(time)
-            fail = self.empire.update_countdown(time)
+            self.boat.reduce_autonomy(travel_time)
+            fail = self.empire.update_countdown(travel_time)
 
-            if fail:
-                self.fail_prob = 1.0
-                return self.fail_prob
+            if fail:  # the countdown finished, no need to continue
+                path.set_fail_prob(1.0)
+                return float(path.get_fail_prob())
 
-            self.update_date(time)
-            self.update_probability(dst)
-            cur = dst
-        return self.fail_prob
+            path.update_date(travel_time)
+            path.update_probability(dest, self.empire_params["bounty_hunters"])
+            current = dest
+        return float(path.get_fail_prob())
 
     def compute_odds(self) -> float:
-        probas = []
-        for possible_path in self.possible_paths:
-            self.fail_prob = self.compute_odds_for_one_path(possible_path)
-            probas.append(self.fail_prob)
+        probas: List[float] = []
+        for path in self.possible_paths:
+            fail_prob = self.compute_odds_for_one_path(path)
+            probas.append(fail_prob)
 
+        # return the highest success probability
         fail_probability = min(probas)
         success_proba = (1.0 - fail_probability) * 100
         return success_proba

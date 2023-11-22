@@ -1,1 +1,1 @@
-mypy  --strict --follow-imports=skip --allow-untyped-decorator .
+mypy  --strict --follow-imports=skip --allow-untyped-decorator --show-error-context .

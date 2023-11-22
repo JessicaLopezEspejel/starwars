@@ -10,7 +10,6 @@ class Empire:
 
     def update_countdown(self, time: int) -> bool:
         self.countdown -= time
-        if self.countdown < 0:  # TODO - maybe == 0?
-            # print("fail --- " , self.countdown)
+        if self.countdown < 0:
             return True
         return False

@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "cli/give-me-the-odds.py",
+            "type": "python",
+            "request": "launch",
+            "program": "cli/give-me-the-odds.py",
+            "console": "integratedTerminal",
+            "args": ["./config/millennium-falcon.json", "./config/example_4/empire.json"]
+        }
+    ]
+}
