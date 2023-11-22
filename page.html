@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Wars</title>
+    <link rel="stylesheet" href="web/css/styles.css">
+    <script src="web/js/script.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Star Wars</h1>
+
+        <img src="web/img/star_wars_web.png" alt="Start Wars" class="image-format" >
+        
+        <br><br>
+
+        <div class="custom-file-input-container">
+            <label for="fileInput" class="custom-button">Select a JSON file</label>
+            <input type="file" id="fileInput" class="custom-file-input" accept=".json" />
+            <!-- To display the file name we selected -->
+            <span class="selected-file" id="selectedFile"></span>
+
+            <button onclick="readFile('empire')">Show JSON</button>
+        </div>
+        
+        <div id="output"></div>
+        <br><br>
+        <button id="computeOdds" onclick="computeOdds()">Compute Odds</button>
+        <div id="oddsOutput"></div>
+
+        <div class="center-button">
+            <button id="clean" class="clean-style" onclick="cleanContent()">Clean</button>
+        </div>
+
+    </div>
+
+    <!--script-->
+    <!--/script-->
+
+</body>
+</html>

@@ -1,7 +1,8 @@
 # Star Wars
 
-
-
+<p align="center">
+  <img width="75%" src="star_wars_git.png" alt="Star Wars challenge">
+</p>
 
 ## Use Poetry to run the project
 
