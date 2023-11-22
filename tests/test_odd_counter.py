@@ -1,6 +1,11 @@
 import unittest
+import unittest
+import sys
+import os
 
-from src.odds_counter import OddsCounter
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from ..src.odds_counter import OddsCounter
 
 boat_params = {
     "autonomy": 6,
