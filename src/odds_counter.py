@@ -40,6 +40,10 @@ class OddsCounter:
         self.possible_paths = list(set(self.possible_paths))
 
     def initiate_objects(self) -> None:
+        """
+        This function initializes the boat (millennium-falcon) and the empire objects.
+        """
+
         self.boat = Boat(autonomy=self.boat_params["autonomy"])
         self.empire = Empire(
             countdown=self.empire_params["countdown"],
@@ -49,6 +53,19 @@ class OddsCounter:
     def compute_possible_paths(
         self, origin: str, destination: str, countdown: int, routes_file_path: str
     ) -> List[Path]:
+        """
+        This function takes the origin planet, the destination planet, the countdown, and the path of routes file
+
+        Parameters:
+        - origin (str): the origin planet.
+        - destination (str): the destination planet.
+        - countdown (int): the countdown for the death star to arrive to the destination planet.
+        - routes_file_path (str): the path of routes between planets.
+
+        Returns:
+        List[Path]: List of all possible paths.
+        """
+
         graph: Dict[str, List[Tuple[str, int]]] = defaultdict(list)
 
         # Connect to the SQLite database
@@ -96,6 +113,16 @@ class OddsCounter:
         return result
 
     def compute_odds_for_one_path(self, path: Path) -> float:
+        """
+        This function takes as input a path and computes its failure probability.
+
+        Parameters:
+        - path (Path): the path to explore.
+
+        Returns:
+        float: failure probability of the given path.
+        """
+
         self.initiate_objects()
         current = self.boat_params["departure"]
         for subpath in path.get_all():
@@ -132,6 +159,13 @@ class OddsCounter:
         return float(path.get_fail_prob())
 
     def compute_odds(self) -> float:
+        """
+        This function computes the success probability of the millennium-falcon.
+
+        Returns:
+        float: success probability.
+        """
+
         probas: List[float] = []
         for path in self.possible_paths:
             fail_prob = self.compute_odds_for_one_path(path)

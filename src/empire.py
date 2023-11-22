@@ -9,6 +9,18 @@ class Empire:
         self.bounty_hunters = bounty_hunters
 
     def update_countdown(self, time: int) -> bool:
+        """
+        This function takes the number of days to substract from the countdown.
+        It returns True if the countdown is negative (failure of the path)
+        and False if it is possible to continue navigating it.
+
+        Parameters:
+        - time (int): Number of days.
+
+        Returns:
+        bool: Failure (True) or not (False).
+        """
+
         self.countdown -= time
         if self.countdown < 0:
             return True

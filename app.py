@@ -12,6 +12,13 @@ CORS(app)
 
 @app.route("/api/computeOdds", methods=["POST"])
 def compute_odds() -> Union[Dict[str, float], Response]:
+    """
+    This function is the intermediate between the frontend and backend.
+
+    Returns:
+    Union[Dict[str, float], Response]: The probability of success in a dictionary
+    """
+
     boat_params = request.json.get("boat_params")
     empire_params = request.json.get("empire_params")
     boat_file_path = "./config/millennium-falcon.json"
