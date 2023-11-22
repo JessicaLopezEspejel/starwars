@@ -12,7 +12,7 @@ boat_params = {
 routes_file_path = "./config/universe.db"
 
 
-class TestCustomDecoder(unittest.TestCase):
+class TestOddsCounter(unittest.TestCase):
     def test_odds_counter_example_1(self) -> None:
         empire_params = {
             "countdown": 7,
