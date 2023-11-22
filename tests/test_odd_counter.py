@@ -2,6 +2,15 @@ import unittest
 
 from src.odds_counter import OddsCounter
 
+boat_params = {
+    "autonomy": 6,
+    "departure": "Tatooine",
+    "arrival": "Endor",
+    "routes_db": "universe.db",
+}
+
+routes_file_path = "./config/universe.db"
+
 
 class TestCustomDecoder(unittest.TestCase):
     def test_odds_counter_example_1(self) -> None:
@@ -14,14 +23,11 @@ class TestCustomDecoder(unittest.TestCase):
             ],
         }
 
-        boat_params = {
-            "autonomy": 6,
-            "departure": "Tatooine",
-            "arrival": "Endor",
-            "routes_db": "universe.db",
-        }
-
-        odds_counter = OddsCounter(boat_params=boat_params, empire_params=empire_params)
+        odds_counter = OddsCounter(
+            boat_params=boat_params,
+            empire_params=empire_params,
+            routes_file_path=routes_file_path,
+        )
         success_proba = odds_counter.compute_odds()
 
         self.assertEqual(success_proba, 0.0)
@@ -36,14 +42,11 @@ class TestCustomDecoder(unittest.TestCase):
             ],
         }
 
-        boat_params = {
-            "autonomy": 6,
-            "departure": "Tatooine",
-            "arrival": "Endor",
-            "routes_db": "universe.db",
-        }
-
-        odds_counter = OddsCounter(boat_params=boat_params, empire_params=empire_params)
+        odds_counter = OddsCounter(
+            boat_params=boat_params,
+            empire_params=empire_params,
+            routes_file_path=routes_file_path,
+        )
         success_proba = odds_counter.compute_odds()
 
         self.assertEqual(success_proba, 81.0)
@@ -58,14 +61,11 @@ class TestCustomDecoder(unittest.TestCase):
             ],
         }
 
-        boat_params = {
-            "autonomy": 6,
-            "departure": "Tatooine",
-            "arrival": "Endor",
-            "routes_db": "universe.db",
-        }
-
-        odds_counter = OddsCounter(boat_params=boat_params, empire_params=empire_params)
+        odds_counter = OddsCounter(
+            boat_params=boat_params,
+            empire_params=empire_params,
+            routes_file_path=routes_file_path,
+        )
         success_proba = odds_counter.compute_odds()
 
         self.assertEqual(success_proba, 90.0)
@@ -80,14 +80,11 @@ class TestCustomDecoder(unittest.TestCase):
             ],
         }
 
-        boat_params = {
-            "autonomy": 6,
-            "departure": "Tatooine",
-            "arrival": "Endor",
-            "routes_db": "universe.db",
-        }
-
-        odds_counter = OddsCounter(boat_params=boat_params, empire_params=empire_params)
+        odds_counter = OddsCounter(
+            boat_params=boat_params,
+            empire_params=empire_params,
+            routes_file_path=routes_file_path,
+        )
         success_proba = odds_counter.compute_odds()
 
         self.assertEqual(success_proba, 100.0)

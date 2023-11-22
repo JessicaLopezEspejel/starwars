@@ -58,3 +58,12 @@ http://localhost:8080/page.html
 4. Upload the falcon.json file 
 5. Click on "Show JSON" to display and load the json file
 6. Click on "Compute Odds" to display success probibility. Note that you can clear the fields by clicking on "Clear". 
+
+### How to run unit tests
+While being in the current repository, run:
+
+
+```
+pytest tests/
+```
+
