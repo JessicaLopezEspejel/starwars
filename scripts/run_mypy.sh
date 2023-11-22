@@ -1,0 +1,1 @@
+mypy  --strict --follow-imports=skip --allow-untyped-decorator .

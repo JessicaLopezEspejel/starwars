@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "starwars"
+version = "0.1.0"
+description = "Starwars web application"
+authors = ["Jessica Lopez"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+flask = "^3.0.0"
+flask-cors = "^4.0.0"
+black = "^23.10.1"
+isort = "^5.12.0"
+flake8 = "^6.1.0"
+mypy = "^1.6.1"
+types-flask-cors = "^4.0.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
