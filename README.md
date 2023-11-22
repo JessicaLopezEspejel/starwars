@@ -35,6 +35,8 @@ python -m cli.give-me-the-odds "./config/millennium-falcon.json" "./config/examp
 
 
 ### How to run the web application
+While being in the current repository:
+
 1. Open a terminal, activate the starwars_env environement, and then type:  
 
 ```
@@ -50,7 +52,7 @@ python app.py
 3. In your browser, visit:
 
 ```
-http://localhost:8000/page.html
+http://localhost:8080/page.html
 ```
 
 4. Upload the falcon.json file 
